@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class GUI extends JFrame implements ActionListener {
@@ -52,13 +53,19 @@ public class GUI extends JFrame implements ActionListener {
 
 		setContentPane(allSides);
 	}
+	public void resetGame(){
+		for (int i = 0; i < buttons.size();i++){
+			buttons.get(i).setText("?");
+		}
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+
 		switch (e.getActionCommand()) {
 		case "0":
 			buttons.get(0).setText(turns());
-			checkWin();
+			
 			break;
 		case "1":
 			buttons.get(1).setText(turns());
@@ -86,29 +93,48 @@ public class GUI extends JFrame implements ActionListener {
 			break;
 
 		}
+		checkWinner();
 	}
 
 	int turn = 0;
 
 	public String turns() {
 		turn++;
+		
 		if ((turn % 2) == 0) {
 			return "x";
 		} else
 			return "o";
+		
 	}
-
 	int[][] winCombinations = new int[][] { { 0, 1, 2 }, { 3, 4, 5 },
 			{ 6, 7, 8 }, // horizontal wins
 			{ 0, 3, 6 }, { 1, 4, 7 }, { 2, 5, 8 }, // virticle wins
 			{ 0, 4, 8 }, { 2, 4, 6 } }; // diagonal wins
 
-	public void checkWin() {
+	public void checkWinner(){
+		 // horizontal wins
+		checkWin(0, 1, 2);
+		checkWin(3, 4, 5);
+		checkWin(6, 7, 8);
+		 // virticle wins
+		checkWin(0, 3, 6);
+		checkWin(1, 4, 7);
+		checkWin(2, 5, 8);
+		// diagonal wins
+		checkWin(0, 4, 8);
+		checkWin(2, 4, 6);
+		
+	}
 
-		if (buttons.get(0).getText() == buttons.get(1).getText() && buttons.get(1).getText() == buttons.get(2).getText()&&buttons.get(2).getText() == buttons.get(3).getText()) {
-			System.out.println("yolo");
-
+	public void checkWin(int ans1, int ans2, int ans3) {
+		String win =buttons.get(ans1).getText() + buttons.get(ans2).getText() + buttons.get(ans3).getText();
+		if (win.equals("xxx")){
+			JOptionPane.showMessageDialog(null, "X WINS");
+			resetGame();
+		}else if(win.equals("ooo")){
+			JOptionPane.showMessageDialog(null, "O WINS");
+			resetGame();
 		}
-
 	}
 }
